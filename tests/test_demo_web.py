@@ -65,6 +65,11 @@ class FakePipeline:
         }
 
 
+class FailingPipeline(FakePipeline):
+    def predict(self, *args, **kwargs):
+        raise RuntimeError("C:\\Users\\example\\private-model.pt")
+
+
 class FakeDetector:
     def predict(self, image, threshold):
         return [Detection((10, 10, 90, 70), 0.91)]
@@ -136,6 +141,23 @@ def test_predict_validates_and_accepts_image() -> None:
         files={"file": ("notes.txt", b"not an image", "text/plain")},
     )
     assert invalid.status_code == 415
+
+
+def test_predict_does_not_expose_internal_error_details() -> None:
+    client = TestClient(create_app(FailingPipeline()))
+    response = client.post(
+        "/api/predict",
+        files={"file": ("panel.jpg", image_bytes(), "image/jpeg")},
+        data={
+            "detector_model": "yolov8s",
+            "classifier_model": "edgenext",
+            "mode": "full",
+            "threshold": "0.25",
+        },
+    )
+    assert response.status_code == 503
+    assert response.json()["detail"] == "Secilen model su anda kullanilamiyor."
+    assert "private-model.pt" not in response.text
 
 
 def test_pipeline_writes_annotated_result(tmp_path: Path) -> None:
