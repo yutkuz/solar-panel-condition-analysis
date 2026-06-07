@@ -1,0 +1,25 @@
+name: solar-panel-cls
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - numpy
+  - pandas
+  - pillow
+  - scikit-learn
+  - matplotlib
+  - seaborn
+  - tqdm
+  - pyyaml
+  - pip:
+      - torch
+      - torchvision
+      - timm
+      - kaggle
+      - kagglehub
+      - roboflow
+      - opencv-python
+      - rich

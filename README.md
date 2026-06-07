@@ -1,0 +1,89 @@
+# Solar Panel Condition Analysis
+
+End-to-end solar panel detection and condition classification system with
+multiple deep learning architectures, ensemble inference, lazy model loading
+and a FastAPI web interface.
+
+## Features
+
+- 10 selectable solar panel detection models
+- 19 selectable condition classification models
+- EfficientNet-B3 + SwinV2-B weighted ensemble
+- Full pipeline, classification-only and detection-only modes
+- Lazy loading: only the active detector and classifier stay in memory
+- Responsive local web interface
+- Annotated image and JSON result export
+
+## Classification Classes
+
+- Clean
+- Dust
+- Snow
+- Bird drop
+- Crack or physical damage
+
+## Model Checkpoints
+
+The model archive is hosted on Google Drive because it exceeds GitHub's file
+size limits.
+
+**Download:** [Google Drive model archive](https://drive.google.com/file/d/1dX6k0gjINOxWBufQCYlpZl74DiXqTd0h/view?usp=sharing)
+
+Archive name:
+
+```text
+gunes_paneli_tum_modeller.zip
+```
+
+After downloading, extract the archive into the repository root. The following
+directories should then exist:
+
+```text
+experiments/
+legacy_models/
+```
+
+The archive checksum is listed in `SHA256SUMS.txt`.
+
+## Installation
+
+Python 3.11 is recommended.
+
+```powershell
+conda create -n solar-panel-cls python=3.11
+conda activate solar-panel-cls
+python -m pip install -r requirements-demo.txt
+```
+
+YOLO-NAS uses a separate Python 3.10 environment with `super_gradients`.
+Set its interpreter path when it is not located at the default conda path:
+
+```powershell
+$env:YOLO_NAS_PYTHON = "C:\path\to\python.exe"
+```
+
+## Run
+
+```powershell
+.\scripts\run_web_demo.ps1
+```
+
+Open `http://127.0.0.1:8000`.
+
+API documentation is available at `http://127.0.0.1:8000/docs`.
+
+## Tests
+
+```powershell
+python -m pytest tests/test_demo_web.py -q
+```
+
+## Documentation
+
+Additional architecture and demo documentation is available in `docs/`.
+
+## Model Score Note
+
+Some classification scores originate from different experimental datasets and
+training phases. They are displayed as reported results and should not be
+treated as a perfectly controlled benchmark across every model.
