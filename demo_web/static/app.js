@@ -45,6 +45,11 @@ function selectedLabel(select) {
   return select.selectedOptions[0].textContent.split("·")[0].trim();
 }
 
+function updateRecommendationHighlight(select) {
+  const recommended = select.selectedOptions[0]?.dataset.recommended === "true";
+  select.classList.toggle("recommended-selection", recommended);
+}
+
 function setFile(file) {
   if (!file) return;
   if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
@@ -246,6 +251,11 @@ elements.threshold.addEventListener("input", () => {
 });
 document.querySelectorAll('input[name="mode"]').forEach((input) => {
   input.addEventListener("change", applyMode);
+});
+
+[elements.detectorModel, elements.classifierModel].forEach((select) => {
+  select.addEventListener("change", () => updateRecommendationHighlight(select));
+  updateRecommendationHighlight(select);
 });
 
 applyMode();

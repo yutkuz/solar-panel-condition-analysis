@@ -481,6 +481,26 @@ footer {
   outline: 2px solid rgba(13, 107, 78, .1);
 }
 
+.select-field select.recommended-selection {
+  color: var(--green);
+  border-color: var(--green);
+  background: #f2faf6;
+  box-shadow: inset 0 0 0 1px rgba(13, 107, 78, .08);
+  font-weight: 700;
+}
+
+.select-field select option {
+  color: var(--ink);
+  background: white;
+  font-weight: 400;
+}
+
+.select-field select option.recommended-option {
+  color: var(--green);
+  background: #f2faf6;
+  font-weight: 700;
+}
+
 .select-field select:disabled {
   opacity: .45;
   cursor: not-allowed;
