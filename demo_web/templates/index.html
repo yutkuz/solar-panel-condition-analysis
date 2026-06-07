@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#071711">
   <title>Güneş Paneli Analiz Sistemi</title>
-  <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}?v=2">
 </head>
 <body>
   <div class="ambient ambient-one"></div>
@@ -65,7 +65,7 @@
     <section class="hero">
       <div class="eyebrow"><span></span> Yapay zekâ destekli panel denetimi</div>
       <h1>Panel durumunu<br><em>bir fotoğrafla</em> analiz edin.</h1>
-      <p>10 tespit, 19 sınıflandırma modeli ve ensemble seçeneğini istediğiniz kombinasyonla çalıştırın; tam akış, yalnızca tespit veya yalnızca sınıflandırma sonuçlarını karşılaştırın.</p>
+      <p>10 tespit ve 19 sınıflandırma olmak üzere toplam 29 eğitilmiş modeli istediğiniz kombinasyonla çalıştırın. Ayrıca ensemble seçeneğiyle tam akış, yalnızca tespit veya yalnızca sınıflandırma analizi gerçekleştirin.</p>
     </section>
 
     <section class="workspace">
@@ -114,8 +114,8 @@
             <span>Tespit modeli</span>
             <select id="detectorModel">
               {% for key, model in detector_rankings %}
-              <option value="{{ key }}" {% if key == "yolov8s" %}selected{% endif %}>
-                {{ model.label }} · %{{ "%.2f"|format(model.map50_95 * 100) }}
+              <option value="{{ key }}" {% if key == "yolov8s" %}selected{% endif %}{% if key in detector_recommendations %} data-recommended="true" class="recommended-option"{% endif %}>
+                {{ model.label }} · %{{ "%.2f"|format(model.map50_95 * 100) }} · {{ detector_speed_labels.get(key, "Orta") }}{% if key in detector_recommendations %} · ✓ Önerilen · {{ detector_recommendations[key] }}{% endif %}
               </option>
               {% endfor %}
             </select>
@@ -124,8 +124,8 @@
             <span>Sınıflandırma modeli</span>
             <select id="classifierModel">
               {% for key, model in classifier_rankings %}
-              <option value="{{ key }}" {% if key == "edgenext" %}selected{% endif %}>
-                {{ model.label }} · %{{ "%.2f"|format(model.macro_f1 * 100) }}
+              <option value="{{ key }}" {% if key == "edgenext" %}selected{% endif %}{% if key in classifier_recommendations %} data-recommended="true" class="recommended-option"{% endif %}>
+                {{ model.label }} · %{{ "%.2f"|format(model.macro_f1 * 100) }} · {{ classifier_speed_labels.get(key, "Orta") }}{% if key in classifier_recommendations %} · ✓ Önerilen · {{ classifier_recommendations[key] }}{% endif %}
               </option>
               {% endfor %}
             </select>
@@ -201,6 +201,6 @@
   </main>
 
   <footer><span>Güneş Paneli Analiz Sistemi</span><span>Bitirme Projesi · 2026</span></footer>
-  <script src="{{ url_for('static', path='/app.js') }}" defer></script>
+  <script src="{{ url_for('static', path='/app.js') }}?v=2" defer></script>
 </body>
 </html>
