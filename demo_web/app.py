@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import io
+import logging
 import os
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -15,6 +16,7 @@ from PIL import Image, ImageOps, UnidentifiedImageError
 from demo_web.inference.pipeline import InferencePipeline
 
 
+logger = logging.getLogger(__name__)
 APP_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = APP_DIR.parent
 OUTPUT_ROOT = APP_DIR / "outputs"
@@ -135,13 +137,22 @@ def create_app(pipeline: InferencePipeline | None = None) -> FastAPI:
                 threshold,
             )
         except (RuntimeError, FileNotFoundError) as exc:
-            raise HTTPException(status_code=503, detail=str(exc)) from exc
+            logger.exception("Model kullanima hazirlanirken hata olustu.")
+            raise HTTPException(
+                status_code=503,
+                detail="Secilen model su anda kullanilamiyor.",
+            ) from exc
         except ValueError as exc:
-            raise HTTPException(status_code=422, detail=str(exc)) from exc
+            logger.exception("Tahmin girdisi islenirken hata olustu.")
+            raise HTTPException(
+                status_code=422,
+                detail="Tahmin girdisi islenemedi.",
+            ) from exc
         except Exception as exc:
+            logger.exception("Tahmin sirasinda beklenmeyen hata olustu.")
             raise HTTPException(
                 status_code=500,
-                detail=f"Tahmin sirasinda beklenmeyen hata: {exc}",
+                detail="Tahmin sirasinda beklenmeyen bir hata olustu.",
             ) from exc
 
     @app.get("/api/download/{request_id}/{filename}")
