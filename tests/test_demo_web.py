@@ -15,9 +15,11 @@ from demo_web.inference.schemas import Classification, Detection
 class FakeModels:
     device = "cpu"
     detectors = {
+        "rfdetr_small": SimpleNamespace(label="RF-DETR Small", map50_95=0.7524),
         "yolov8s": SimpleNamespace(label="YOLOv8s", map50_95=0.6093),
     }
     classifiers = {
+        "focalnet": SimpleNamespace(label="FocalNet", macro_f1=0.9937),
         "edgenext": SimpleNamespace(label="EdgeNeXt", macro_f1=0.9906),
     }
 
@@ -116,6 +118,10 @@ def test_index_and_health() -> None:
     response = client.get("/")
     assert response.status_code == 200
     assert "Güneş Paneli Analiz Sistemi" in response.text
+    assert "YOLOv8s · %60.93 · Hızlı · ✓ Önerilen · Pratik" in response.text
+    assert "RF-DETR Small · %75.24 · Orta · ✓ Önerilen · En güçlü" in response.text
+    assert "EdgeNeXt · %99.06 · Hızlı · ✓ Önerilen · Pratik" in response.text
+    assert "FocalNet · %99.37 · Orta · ✓ Önerilen · En güçlü" in response.text
     health = client.get("/api/health")
     assert health.status_code == 200
     assert health.json()["models"]["device"] == "cpu"
