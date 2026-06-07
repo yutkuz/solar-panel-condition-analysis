@@ -24,6 +24,52 @@ MAX_UPLOAD_BYTES = 15 * 1024 * 1024
 MAX_IMAGE_PIXELS = 32_000_000
 ALLOWED_FORMATS = {"JPEG", "PNG", "WEBP"}
 
+DETECTOR_SPEED_LABELS = {
+    "rfdetr_small": "Orta",
+    "deformable_detr": "Yavaş",
+    "yolonas_s": "Orta",
+    "efficientdet_d2": "Orta",
+    "yolov8s": "Hızlı",
+    "rtdetr_l": "Yavaş",
+    "yolo11s": "Hızlı",
+    "efficientdet_d1": "Orta",
+    "yolo12s": "Hızlı",
+    "grounding_dino_tiny": "Yavaş",
+}
+
+CLASSIFIER_SPEED_LABELS = {
+    "focalnet": "Orta",
+    "edgenext": "Hızlı",
+    "mambavision": "Orta",
+    "fastvit": "Hızlı",
+    "repvit": "Hızlı",
+    "tinyvit": "Hızlı",
+    "maxvit": "Orta",
+    "poolformer": "Hızlı",
+    "coatnet": "Orta",
+    "siglip": "Orta",
+    "legacy_effnet_b3": "Hızlı",
+    "legacy_convnext": "Orta",
+    "legacy_swinv2": "Yavaş",
+    "legacy_clip": "Yavaş",
+    "legacy_maxvit": "Orta",
+    "legacy_dinov2b": "Yavaş",
+    "legacy_effnetv2l": "Yavaş",
+    "legacy_vitlarge": "Yavaş",
+    "legacy_dinov2s": "Orta",
+    "ensemble_effnet_swin": "Yavaş",
+}
+
+DETECTOR_RECOMMENDATIONS = {
+    "rfdetr_small": "En güçlü",
+    "yolov8s": "Pratik",
+}
+
+CLASSIFIER_RECOMMENDATIONS = {
+    "focalnet": "En güçlü",
+    "edgenext": "Pratik",
+}
+
 
 def _read_image(data: bytes) -> Image.Image:
     if not data:
@@ -78,6 +124,10 @@ def create_app(pipeline: InferencePipeline | None = None) -> FastAPI:
             context={
                 "detectors": models.detectors,
                 "classifiers": models.classifiers,
+                "detector_speed_labels": DETECTOR_SPEED_LABELS,
+                "classifier_speed_labels": CLASSIFIER_SPEED_LABELS,
+                "detector_recommendations": DETECTOR_RECOMMENDATIONS,
+                "classifier_recommendations": CLASSIFIER_RECOMMENDATIONS,
                 "detector_rankings": sorted(
                     models.detectors.items(),
                     key=lambda item: item[1].map50_95,
