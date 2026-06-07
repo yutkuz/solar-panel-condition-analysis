@@ -14,6 +14,12 @@ and a FastAPI web interface.
 - Responsive local web interface
 - Annotated image and JSON result export
 
+The web interface provides 29 selectable trained models in total: 10 detection
+models and 19 classification models. The weighted ensemble is an additional
+inference option, not a separately trained model. The downloadable archive
+contains 33 checkpoint files, including experimental checkpoints that are not
+listed as separate selections in the web interface.
+
 ## Classification Classes
 
 - Clean
